@@ -1,0 +1,75 @@
+from pynput.keyboard import Key, Listener
+import rospy
+from getkey import getkey, keys
+from geometry_msgs.msg import Twist 
+import numpy as np
+import math as mt
+from turtlesim.srv import TeleportAbsolute
+from turtlesim.srv import TeleportRelative
+from std_srvs import srv
+
+def clear():
+    rospy.wait_for_service('clear')
+    try:
+        clear_bg = rospy.ServiceProxy('clear', srv.Empty)
+    except rospy.ServiceException as e:
+        print(str(e))
+
+def teleport(x, y, ang):
+    rospy.wait_for_service('/turtle1/teleport_absolute')
+    try:
+        teleportA = rospy.ServiceProxy('/turtle1/teleport_absolute', TeleportAbsolute)
+        resp1 = teleportA(x, y, ang)
+        #print('Teleported to x: {}, y: {}, ang: {}'.format(str(x),str(y),str(ang)))
+    except rospy.ServiceException as e:
+        print(str(e))
+
+def teleportRel(x, ang):
+    rospy.wait_for_service('/turtle1/teleport_relative')
+    try:
+        teleportR = rospy.ServiceProxy('/turtle1/teleport_relative', TeleportRelative)
+        resp1 = teleportR(x, ang)
+        #print('Relatively teleported to x: {}, ang: {}'.format(str(x),str(ang)))
+    except rospy.ServiceException as e:
+        print(str(e))
+
+def pubVel(vel_x, ang_z, t):
+    pub = rospy.Publisher('/turtle1/cmd_vel', Twist, queue_size=10)
+    rospy.init_node('velPub', anonymous=False)
+    vel = Twist()
+    vel.linear.x = vel_x
+    vel.angular.z = ang_z
+    #rospy.loginfo(vel)
+    endTime = rospy.Time.now() + rospy.Duration(t)
+    while rospy.Time.now() < endTime:
+        pub.publish(vel)
+
+def on_press(key):
+    key =getkey()
+    if key == 'a':
+        pubVel(0,1,0.5)
+    elif key == 'd':
+        pubVel(0,-1,0.5)
+    elif key == 'w':
+        pubVel(1,0,0.5)
+    elif key == 's':
+        pubVel(-1,0,0.5)    
+    elif key == 'd':
+        pubVel(0,-1,0.5)
+    elif key == 'r':
+        teleport(5.5,5.5,0)
+    elif key == ' ':
+        teleportRel(0,mt.pi)
+    elif key == 'c':
+        clear()  
+def on_release(key):
+    if key == Key.esc:
+        return False
+if __name__ == '__main__':
+    pubVel(0,0,0.1)
+    try:
+        with Listener(on_press=on_press, on_release=on_release) as listener:
+            listener.join()
+    except rospy.ROSInterruptException:
+        pass
+   
