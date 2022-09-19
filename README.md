@@ -1,19 +1,15 @@
 <h1 align="center"; style="text-align:center;">Laboratory 2: Introduction to ROS</h1>
-
 <p align="center";style="font-size:50px; text-align:center; line-height : 50px;  margin-top : 0; margin-bottom : 0; "> <br> Universidad Nacional de Colombia</p>
-
 <p align="center";style="font-size:50px; text-align:center; line-height : 50px;  margin-top : 0; margin-bottom : 0; "> <br> Robotics</p>
-
 <p align="center";style="font-size:50px; text-align:center; line-height : 40px;  margin-top : 0; margin-bottom : 0; "> <br> Santiago Mariño (samrinoj) - Daniel Pineda (dpinedasi)</p>
 
 
 <p align="center"; style="font-size:50px; text-align:center; line-height : 30px; margin-top : 0; "> <br>16 de Septiembre de 2022</p>
 
 
+## ROS connection with MATLAB
+
 ## Methodology
-
-
-### ROS connection with MATLAB
 
 **1.** ROS and turtlesim are initialized in ubuntu terminals with *roscore* and *rosrun turtlesim turtlesim node* codes
 
